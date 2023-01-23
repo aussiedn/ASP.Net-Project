@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pets_R_Us.Data;
 
@@ -11,9 +12,10 @@ using Pets_R_Us.Data;
 namespace Pets_R_Us.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230119022037_ExtendedUserTable")]
+    partial class ExtendedUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -159,31 +161,6 @@ namespace Pets_R_Us.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Pets_R_Us.Data.PetImageTable", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("ImageCaption")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PetPic")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PetImageTables");
-                });
-
             modelBuilder.Entity("Pets_R_Us.Data.Users", b =>
                 {
                     b.Property<string>("Id")
@@ -238,9 +215,6 @@ namespace Pets_R_Us.Data.Migrations
                     b.Property<bool>("PetGender")
                         .HasColumnType("bit");
 
-                    b.Property<int>("PetImageTableId")
-                        .HasColumnType("int");
-
                     b.Property<string>("PetName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -277,8 +251,6 @@ namespace Pets_R_Us.Data.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("PetImageTableId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -332,17 +304,6 @@ namespace Pets_R_Us.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Pets_R_Us.Data.Users", b =>
-                {
-                    b.HasOne("Pets_R_Us.Data.PetImageTable", "PetImageTable")
-                        .WithMany()
-                        .HasForeignKey("PetImageTableId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PetImageTable");
                 });
 #pragma warning restore 612, 618
         }
