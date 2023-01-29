@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Pets_R_Us.Contracts;
 using Pets_R_Us.Data;
 using Pets_R_Us.Models;
 
@@ -8,19 +9,19 @@ namespace Pets_R_Us.Controllers
 {
     public class PetImageTablesController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IPetImageRepository petImageRepository;
         private readonly IMapper mapper;
 
-        public PetImageTablesController(ApplicationDbContext context, IMapper mapper)
+        public PetImageTablesController(IPetImageRepository petImageRepository, IMapper mapper)
         {
-            _context = context;
+            this.petImageRepository = petImageRepository;
             this.mapper = mapper;
         }
 
         // GET: PetImageTables
         public async Task<IActionResult> Index()
         {
-            var petImagesTables = mapper.Map<List<PetImageTablesVM>>(await _context.PetImageTables.ToListAsync());
+            var petImagesTables = mapper.Map<List<PetImageTablesVM>>(await petImageRepository.GetAllAsync());
 
             return View(petImagesTables);
         }
@@ -28,18 +29,13 @@ namespace Pets_R_Us.Controllers
         // GET: PetImageTables/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.PetImageTables == null)
-            {
-                return NotFound();
-            }
-
-            var petImageTable = await _context.PetImageTables
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var petImageTable = await petImageRepository.GetAsync(id);
             if (petImageTable == null)
             {
                 return NotFound();
             }
 
+            var petImageTableVM = mapper.Map<PetImageTablesVM>(petImageTable);
             return View(petImageTable);
         }
 
@@ -59,8 +55,7 @@ namespace Pets_R_Us.Controllers
             if (ModelState.IsValid)
             {
                 var petImageTables = mapper.Map<PetImageTable>(petImageTablesVM);
-                _context.Add(petImageTables);
-                await _context.SaveChangesAsync();
+                await petImageRepository.AddAsync(petImageTables);
                 return RedirectToAction(nameof(Index));
             }
             return View(petImageTablesVM);
@@ -70,12 +65,7 @@ namespace Pets_R_Us.Controllers
         // GET: PetImageTables/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.PetImageTables == null)
-            {
-                return NotFound();
-            }
-
-            var petImageTable = await _context.PetImageTables.FindAsync(id);
+            var petImageTable = await petImageRepository.GetAsync(id);
             if (petImageTable == null)
             {
                 return NotFound();
@@ -102,12 +92,11 @@ namespace Pets_R_Us.Controllers
                 try
                 {
                     var petImageTables = mapper.Map<PetImageTable>(petImageTablesVM);
-                    _context.Update(petImageTables);
-                    await _context.SaveChangesAsync();
+                    await petImageRepository.UpdateAsync(petImageTables);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PetImageTableExists(petImageTablesVM.Id))
+                    if (!await petImageRepository.Exists(petImageTablesVM.Id))
                     {
                         return NotFound();
                     }
@@ -121,46 +110,15 @@ namespace Pets_R_Us.Controllers
             return View(petImageTablesVM);
         }
 
-        // GET: PetImageTables/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.PetImageTables == null)
-            {
-                return NotFound();
-            }
-
-            var petImageTable = await _context.PetImageTables
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (petImageTable == null)
-            {
-                return NotFound();
-            }
-
-            return View(petImageTable);
-        }
 
         // POST: PetImageTables/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.PetImageTables == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.PetImageTables'  is null.");
-            }
-            var petImageTable = await _context.PetImageTables.FindAsync(id);
-            if (petImageTable != null)
-            {
-                _context.PetImageTables.Remove(petImageTable);
-            }
-
-            await _context.SaveChangesAsync();
+            await petImageRepository.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
-        }
 
-        private bool PetImageTableExists(int id)
-        {
-            return _context.PetImageTables.Any(e => e.Id == id);
         }
     }
 }

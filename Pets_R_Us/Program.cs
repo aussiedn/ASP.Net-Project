@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Pets_R_Us.Configurations;
+using Pets_R_Us.Contracts;
 using Pets_R_Us.Data;
+using Pets_R_Us.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,9 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<Users>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IPetImageRepository, PetImageRepository>();
 
 builder.Services.AddAutoMapper(typeof(MapperConfig));
 
