@@ -3,6 +3,7 @@ using Pets_R_Us.Configurations;
 using Pets_R_Us.Contracts;
 using Pets_R_Us.Data;
 using Pets_R_Us.Repositories;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
