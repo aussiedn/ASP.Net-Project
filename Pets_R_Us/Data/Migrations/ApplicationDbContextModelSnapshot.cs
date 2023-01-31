@@ -175,6 +175,10 @@ namespace Pets_R_Us.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PetImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PetPic")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -238,7 +242,7 @@ namespace Pets_R_Us.Data.Migrations
                     b.Property<bool>("PetGender")
                         .HasColumnType("bit");
 
-                    b.Property<int>("PetImageTableId")
+                    b.Property<int?>("PetImageTableId")
                         .HasColumnType("int");
 
                     b.Property<string>("PetName")
@@ -338,9 +342,7 @@ namespace Pets_R_Us.Data.Migrations
                 {
                     b.HasOne("Pets_R_Us.Data.PetImageTable", "PetImageTable")
                         .WithMany()
-                        .HasForeignKey("PetImageTableId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PetImageTableId");
 
                     b.Navigation("PetImageTable");
                 });
