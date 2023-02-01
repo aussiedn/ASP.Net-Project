@@ -7,5 +7,7 @@
         public string ImageTitle { get; set; }
 
         public string ImageCaption { get; set; }
+
+        public string? PetImageUrl { get; set; }
     }
 }
