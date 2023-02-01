@@ -4,44 +4,33 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+@using (Html.BeginForm("Create", "UploadFiles", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
 
-<h4>PetImageTable</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="PetPic" class="control-label"></label>
-                <input asp-for="PetPic" class="form-control" />
-                <span asp-validation-for="PetPic" class="text-danger"></span>
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.PetPic, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PetPic, new { htmlAttributes = new { @class = "form-control", @type="file"} })
+                @Html.ValidationMessageFor(model => model.PetPic, "", new { @class = "text-danger" })
             </div>
-            <div class="form-group">
-                <label asp-for="ImageTitle" class="control-label"></label>
-                <input asp-for="ImageTitle" class="form-control" />
-                <span asp-validation-for="ImageTitle" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Upload" class="btn btn-primary" />
             </div>
-            <div class="form-group">
-                <label asp-for="ImageCaption" class="control-label"></label>
-                <input asp-for="ImageCaption" class="form-control" />
-                <span asp-validation-for="ImageCaption" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10 text-success">
+                @ViewBag.FileStatus
             </div>
-            <div class="form-group">
-                <label asp-for="PetImage" class="control-label"></label>
-                <div class="custom-file">
-                    <input asp-for="PetImage" class="custom-file-input" id="customFile"/>
-                    <label class="custom-file-label" for="customFile">Choose file</label>
-                </div>
-                <span asp-validation-for="PetImage" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Upload" class="btn btn-outline-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+}
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
