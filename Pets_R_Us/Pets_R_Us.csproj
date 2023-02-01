@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="UploadedFiles\**" />
+    <Content Remove="UploadedFiles\**" />
+    <EmbeddedResource Remove="UploadedFiles\**" />
+    <None Remove="UploadedFiles\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Views\Shared\Class.cs" />
     <Compile Remove="Views\Shared\_CatLayout.cshtml.cs" />
   </ItemGroup>
@@ -35,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="UploadedFiles\" />
+    <Folder Include="wwwroot\UploadedFiles\Images\" />
   </ItemGroup>
 
 </Project>
