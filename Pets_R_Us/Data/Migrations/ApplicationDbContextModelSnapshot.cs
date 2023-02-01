@@ -175,17 +175,13 @@ namespace Pets_R_Us.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PetImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PetPic")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("PetImageTables", (string)null);
+                    b.ToTable("PetImageTables");
                 });
 
             modelBuilder.Entity("Pets_R_Us.Data.Users", b =>

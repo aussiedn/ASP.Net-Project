@@ -11,14 +11,11 @@ namespace Pets_R_Us.Controllers
     {
         private readonly IPetImageRepository petImageRepository;
         private readonly IMapper mapper;
-        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public PetImageTablesController(IPetImageRepository petImageRepository, IMapper mapper,
-            IWebHostEnvironment webHostEnvironment)
+        public PetImageTablesController(IPetImageRepository petImageRepository, IMapper mapper)
         {
             this.petImageRepository = petImageRepository;
             this.mapper = mapper;
-            this.webHostEnvironment = webHostEnvironment;
         }
 
         // GET: PetImageTables
@@ -57,18 +54,6 @@ namespace Pets_R_Us.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (petImageTablesVM.PetImage != null)
-                {
-                    string folder = "./UploadedFiles/Images/";
-                    folder += Guid.NewGuid().ToString() + petImageTablesVM.PetImage.FileName;
-
-                    petImageTablesVM.PetImageUrl = folder;
-
-                    string serverFolder = Path.Combine(this.webHostEnvironment.WebRootPath, folder);
-
-                    await petImageTablesVM.PetImage.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
-                }
-
                 var petImageTables = mapper.Map<PetImageTable>(petImageTablesVM);
                 await petImageRepository.AddAsync(petImageTables);
                 return RedirectToAction(nameof(Index));
@@ -135,8 +120,5 @@ namespace Pets_R_Us.Controllers
             return RedirectToAction(nameof(Index));
 
         }
-
-
-
     }
 }

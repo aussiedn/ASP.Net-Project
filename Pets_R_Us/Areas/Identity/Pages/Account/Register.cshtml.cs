@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Pets_R_Us.Data;
 using System.ComponentModel.DataAnnotations;
@@ -25,11 +26,13 @@ namespace Pets_R_Us.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
+
             UserManager<Users> userManager,
             IUserStore<Users> userStore,
             SignInManager<Users> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
+
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -37,7 +40,16 @@ namespace Pets_R_Us.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            Roles = new List<SelectListItem>
+        {
+            new SelectListItem {Value = "Cat", Text ="Cat"},
+            new SelectListItem {Value = "Dog", Text = "Dog"},
+            new SelectListItem {Value = "Cat-Dog", Text = "Cat-Dog"}
+        };
         }
+
+        public List<SelectListItem> Roles { get; set; }
+
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -62,6 +74,7 @@ namespace Pets_R_Us.Areas.Identity.Pages.Account
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
+        
         public class InputModel
         {
             /// <summary>
@@ -109,6 +122,10 @@ namespace Pets_R_Us.Areas.Identity.Pages.Account
             [Required]
             [Display(Name = "Pet Gender")]
             public bool PetGender { get; set; }
+           
+            [Required]
+            [Display(Name = "UserRole")]
+            public string UserRole { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -162,6 +179,7 @@ namespace Pets_R_Us.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
+                    var addToRoleResult = await _userManager.AddToRoleAsync(user, Input.UserRole);
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
@@ -219,5 +237,6 @@ namespace Pets_R_Us.Areas.Identity.Pages.Account
             }
             return (IUserEmailStore<Users>)_userStore;
         }
+
     }
 }
