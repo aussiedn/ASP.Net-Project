@@ -1,3 +1,16 @@
 ﻿@{
-    Layout = "_Layout";
+    if (this.User.IsInRole("Cat") || !this.User.Identity.IsAuthenticated)
+    {
+        Layout = "~/Views/Shared/_CatLayout.cshtml";
+    }
+   
+    if (this.User.IsInRole("Dog") || !this.User.Identity.IsAuthenticated)
+    {
+        Layout = "~/Views/Shared/_DogLayout.cshtml";
+    }
+    
+    if (this.User.IsInRole("Cat-Dog") || !this.User.Identity.IsAuthenticated)
+    {
+        Layout = "~/Views/Shared/_CatDogLayout.cshtml";
+    }
 }
