@@ -18,7 +18,15 @@ namespace Pets_R_Us.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult OurServices()
+        {
+            return View();
+        }
+        public IActionResult OurPeople()
+        {
+            return View();
+        }
+        public IActionResult OurLocation()
         {
             return View();
         }
